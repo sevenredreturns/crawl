@@ -1561,8 +1561,8 @@ bool spell_no_hostile_in_range(spell_type spell)
      case SPELL_INTOXICATE:
          return cast_intoxicate(-1, false, true) == spret::abort;
 
-    case SPELL_PROJECTED_WEAPON:
-         return cast_projected_weapon(-1, false, false) == spret::abort;
+    case SPELL_MANIFOLD_ASSAULT:
+         return cast_manifold_assault(-1, false, false) == spret::abort;
 
     default:
         break;

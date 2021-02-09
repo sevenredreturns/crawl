@@ -1068,7 +1068,7 @@ static bool _projectable_weapon()
     return true;
 }
 
-spret cast_projected_weapon(int pow, bool fail, bool real)
+spret cast_manifold_assault(int pow, bool fail, bool real)
 {
     vector<monster*> targets;
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
@@ -1091,7 +1091,7 @@ spret cast_projected_weapon(int pow, bool fail, bool real)
     {
         if (real)
         {
-            mprf("%s would react with the portals catastrophically!",
+            mprf("%s would react catastrophically with paradoxical space!",
                  you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
         }
         return spret::abort;
@@ -1105,10 +1105,7 @@ spret cast_projected_weapon(int pow, bool fail, bool real)
 
     fail_check();
 
-    if (targets.size() < 2)
-        mpr("A portal rends the air!");
-    else
-        mpr("A myriad of tiny portals rend the air!");
+    mpr("Space warps momentarily into an impossible shape!");
 
     const int initial_time = you.time_taken;
 

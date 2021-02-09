@@ -3386,7 +3386,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_PROJECTED_WEAPON, "Transdimensional Blitz",
+    SPELL_MANIFOLD_ASSAULT, "Manifold Assault",
     spschool::translocation,
     spflag::no_ghost,
     4,
