@@ -14,11 +14,14 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
+#include "artefact.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "god-abil.h" // fedhas_passthrough for palentonga charge
 #include "item-prop.h"
 #include "items.h"
@@ -1044,6 +1047,27 @@ spret cast_portal_projectile(int pow, bool fail)
     return spret::success;
 }
 
+static bool _projectable_weapon()
+{
+    if (!you.weapon())
+        return true;
+    const item_def &it = *you.weapon();
+    // These all cause attack prompts, which are awkward to handle.
+    // TODO: support these!
+    static const vector<int> forbidden_unrands = {
+        UNRAND_POWER,
+        UNRAND_DEVASTATOR,
+        UNRAND_VARIABILITY,
+        UNRAND_SINGING_SWORD,
+        UNRAND_TORMENT,
+        UNRAND_ARC_BLADE,
+    };
+    for (int urand : forbidden_unrands)
+        if (is_unrandom_artefact(it, urand))
+            return false;
+    return true;
+}
+
 spret cast_projected_weapon(int pow, bool fail, bool real)
 {
     vector<monster*> targets;
@@ -1060,6 +1084,16 @@ spret cast_projected_weapon(int pow, bool fail, bool real)
     {
         if (real)
             mpr("You can't see anything to attack.");
+        return spret::abort;
+    }
+
+    if (!_projectable_weapon())
+    {
+        if (real)
+        {
+            mprf("%s would react with the portals catastrophically!",
+                 you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
+        }
         return spret::abort;
     }
 
