@@ -693,7 +693,8 @@ bool melee_attack::handle_phase_end()
     if (!cleave_targets.empty())
     {
         attack_cleave_targets(*attacker, cleave_targets, attack_number,
-                              effective_attack_number, wu_jian_attack);
+                              effective_attack_number, wu_jian_attack,
+                              is_projected);
     }
 
     // Check for passive mutation effects.
@@ -3313,9 +3314,17 @@ bool melee_attack::do_knockback(bool trample)
  */
 void melee_attack::cleave_setup()
 {
-    // Don't cleave on a self-attack.
+    // Don't cleave on a self-attack attack.
     if (attacker->pos() == defender->pos())
         return;
+
+    // Allow Gyre & Gimble to 'cleave' when projected, but not other attacks.
+    if (is_projected)
+    {
+        if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
+            cleave_targets.push_back(defender);
+        return;
+    }
 
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
