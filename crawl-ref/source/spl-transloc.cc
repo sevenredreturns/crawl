@@ -1076,12 +1076,18 @@ spret cast_projected_weapon(int pow, bool fail, bool real)
     else
         mpr("A myriad of tiny portals rend the air!");
 
+    const int initial_time = you.time_taken;
+
     shuffle_array(targets);
     const size_t max_targets = 2 + div_rand_round(pow, 50);
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)
     {
         // manually apply noise
         behaviour_event(targets[i], ME_ALERT, &you, you.pos()); // shout + set you as foe
+
+        // Somewhat hacky: reset attack delay before each attack so that only the final
+        // attack ends up actually setting time taken. (No quadratic effects.)
+        you.time_taken = initial_time;
 
         melee_attack atk(&you, targets[i]);
         atk.is_projected = true;
